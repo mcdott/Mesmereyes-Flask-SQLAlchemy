@@ -2,11 +2,9 @@
 
 <h1>Mesmereyes</h1>
 
-<p><em>Accessible Gallery of Interactive Creations</em></p>
+<h2>interActivities</h2>
 
-<h2>Sample Playlist</h2>
-
-{% for interactivity in sample_interactivities %}
+{% for interactivity in all_interactivities %}
 <div class="interactivity">
   <a href="/interactivity/{{ interactivity.id }}">{{ interactivity.title }}</a>
 </div>
