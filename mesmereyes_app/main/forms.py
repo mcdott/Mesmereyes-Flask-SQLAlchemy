@@ -9,7 +9,7 @@ class InterActivityForm(FlaskForm):
     title = StringField('Sketch Title',
         validators=[DataRequired(), Length(min=1, max=80)])
     # TODO check if url is valid
-    url = StringField('Sketch URL',
+    url = StringField('Embed Sketch URL',
         validators=[DataRequired()])
     cc_attribution = TextAreaField('CC Attribution',
         validators=[DataRequired()])

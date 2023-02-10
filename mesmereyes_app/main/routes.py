@@ -41,3 +41,8 @@ def new_interactivity():
         flash('Interactivity added successfully.')
         return redirect(url_for('main.interactivities'))
     return render_template('new_interactivity.html', form=form)
+
+@main.route('/interactivity/<int:interactivity_id>')
+def interactivity(interactivity_id):
+    interactivity = InterActivity.query.get(interactivity_id)
+    return render_template('interactivity_details.html', interactivity=interactivity)
