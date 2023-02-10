@@ -1,8 +1,8 @@
 {% extends 'base.html' %} {% block content %}
 
-<p>Add new interActivity</p>
+<p>add new doodle</p>
 
-<form method="POST" action="{{ url_for('main.new_interactivity') }}">
+<form method="POST" action="{{ url_for('main.new_doodle') }}">
   {{ form.csrf_token }}
   <fieldset>
     <legend>Enter an OpenProcessing Sketch</legend>
@@ -41,7 +41,7 @@
       <li class="error">{{ error }}</li>
       {% endfor %}
     </ul>
-    <input type="submit" value="Add interActivity" />
+    <input type="submit" value="add doodle" />
   </fieldset>
 </form>
 

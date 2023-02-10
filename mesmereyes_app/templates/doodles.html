@@ -2,11 +2,9 @@
 
 <h1>Mesmereyes</h1>
 
-<p><em>Accessible Gallery of Interactive Creations</em></p>
+<h2>doodles</h2>
 
-<h2>Sample Playlist</h2>
-
-{% for doodle in sample_doodles %}
+{% for doodle in all_doodles %}
 <div class="doodle">
   <a href="/doodle/{{ doodle.id }}">{{ doodle.title }}</a>
 </div>

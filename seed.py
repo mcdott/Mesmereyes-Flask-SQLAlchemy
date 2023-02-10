@@ -1,4 +1,4 @@
-from mesmereyes_app.models import InterActivity, Level
+from mesmereyes_app.models import Doodle, Level
 from mesmereyes_app.extensions import db
 
 # Connect to the database
@@ -38,14 +38,14 @@ data = [
 
 # Insert the data into the database
 for item in data:
-    inter_activity = InterActivity(
+    doodle = Doodle(
         title=item['title'],
         url=item['url'],
         cc_attribution=item['cc_attribution'],
         visual_complexity=item['visual_complexity'],
         visual_contrast=item['visual_contrast']
     )
-    db.session.add(inter_activity)
+    db.session.add(doodle)
 
 # Commit the changes
 db.session.commit()

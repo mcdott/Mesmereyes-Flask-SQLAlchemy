@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1>{{ doodle.title }}</h1>
+
+<p><iframe
+        title="{{ doodle.title }}"
+        src="{{ doodle.url }}"
+        width="400px"
+        height="400px"
+      ></p>
+
+<p><strong>cc_attribution:</strong> {{ doodle.cc_attribution }}</p>
+
+<p><strong>Visual Complexity:</strong> {{ doodle.visual_complexity }}</p>
+
+<p><strong>Visual Contrast:</strong> {{ doodle.visual_contrast }}</p>
+
+ {% endblock %}
+
+ <!-- to add button to add to playlist -->
+<!-- <form
+  method="POST"
+  action="{{ url_for('main.add_to_playlist', doodle_id=doodle.id) }}"
+>
+  <input type="submit" value="Add to playlist" />
+</form> -->

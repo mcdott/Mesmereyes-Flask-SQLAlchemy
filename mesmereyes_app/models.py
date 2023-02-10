@@ -9,7 +9,7 @@ class Level(FormEnum):
     MEDIUM = 'Medium'
     HIGH = 'High'
 
-class InterActivity(db.Model):
+class Doodle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80))
     url = db.Column(URLType)
@@ -17,3 +17,11 @@ class InterActivity(db.Model):
     visual_complexity = db.Column(db.Enum(Level), default=Level.MEDIUM)
     visual_contrast = db.Column(db.Enum(Level), default=Level.MEDIUM)
 
+class Playlist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+
+playlist_doodles = db.Table('playlist_doodles',
+    db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.id')),
+    db.Column('doodle_id', db.Integer, db.ForeignKey('doodle.id'))
+)
