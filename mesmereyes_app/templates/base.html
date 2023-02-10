@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mesmereyes</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div id="content">
+      {% for message in get_flashed_messages() %}
+      <p>{{ message }}</p>
+      {% endfor %} {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1>Mesmereyes</h1>
+
+<p><em>Accessible Gallery of Interactive Creations</em></p>
+
+<h2>All InterActivities</h2>
+
+{% for interactivity in all_interactivities %}
+<div class="interactivity">
+  <a href="/interactivity/{{ interactivity.id }}">{{ interactivity.title }}</a>
+</div>
+{% endfor %} {% endblock %}
