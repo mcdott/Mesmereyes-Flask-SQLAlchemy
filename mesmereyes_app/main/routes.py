@@ -1,7 +1,8 @@
 
 from flask import Blueprint, request, render_template, redirect, url_for, flash
+from flask_login import login_user, logout_user, login_required, current_user
 from sqlalchemy import func
-from mesmereyes_app.main.forms import DoodleForm, PlaylistForm
+from mesmereyes_app.main.forms import DoodleForm, PlaylistForm, AddDoodleToPlaylistForm
 from mesmereyes_app.models import Doodle, Playlist
 from mesmereyes_app.extensions import app, db
 
@@ -24,9 +25,9 @@ def doodles():
     return render_template('doodles.html', all_doodles=all_doodles)
 
 @main.route('/new_doodle', methods=['GET', 'POST'])
+@login_required
 def new_doodle():
     form = DoodleForm()
-
     # if form was submitted and contained no errors
     if form.validate_on_submit(): 
         new_doodle = Doodle(
@@ -53,6 +54,7 @@ def playlists():
     return render_template('playlists.html', all_playlists=all_playlists)
 
 @main.route('/new_playlist', methods=['GET', 'POST'])
+@login_required
 def new_playlist():
     form = PlaylistForm()
 
@@ -67,9 +69,33 @@ def new_playlist():
         return redirect(url_for('main.playlists'))
     return render_template('new_playlist.html', form=form)
 
+@main.route('/add_doodle_to_playlist/<int:doodle_id>', methods=['GET', 'POST'])
+def add_doodle_to_playlist(doodle_id):
+    doodle = Doodle.query.get(doodle_id)
+    form = AddDoodleToPlaylistForm()
+    form.playlist_id.choices = [(p.id, p.name) for p in Playlist.query.all()]
+
+    if form.validate_on_submit():
+        playlist = Playlist.query.get(form.playlist_id.data)
+        playlist.doodles.append(doodle)
+        db.session.commit()
+        flash(f'Doodle "{doodle.title}" added to playlist "{playlist.name}"!')
+        return redirect(url_for('main.playlists'))
+
+    return render_template('add_doodle_to_playlist.html', doodle=doodle, form=form)
+
+
 @main.route('/playlist/<int:playlist_id>')
 def playlist(playlist_id):
     playlist = Playlist.query.get(playlist_id)
     return render_template('playlist_details.html', playlist=playlist)
+
+# @app.route('/playlist/<int:doodle_id>', methods=['POST'])
+# @login_required
+# def delete_doodle(doodle_id):
+#     doodle = Doodle.query.get(doodle_id)
+#     current_user.playlist_doodles.remove(doodle)
+#     db.session.commit()
+#     return redirect(url_for('main.playlist'))
 
 

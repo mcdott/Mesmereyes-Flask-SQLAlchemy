@@ -2,16 +2,9 @@
 
 <h1>{{ playlist.name }}</h1>
 
+<ul>
+  {% for doodle in playlist.doodles %}
+  <li><a href="/doodle/{{ doodle.id }}">{{ doodle.title }}</a></li>
+  {% endfor %}
+</ul>
 {% endblock %}
-<!-- <p><iframe
-        title="{{ doodle.title }}"
-        src="{{ doodle.url }}"
-        width="400px"
-        height="400px"
-      ></p>
-
-<p><strong>cc_attribution:</strong> {{ doodle.cc_attribution }}</p>
-
-<p><strong>Visual Complexity:</strong> {{ doodle.visual_complexity }}</p>
-
-<p><strong>Visual Contrast:</strong> {{ doodle.visual_contrast }}</p> -->

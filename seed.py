@@ -7,32 +7,32 @@ db.create_all()
 # Define your data
 data = [
     {
-        'title': 'Interactivity 1',
-        'url': 'https://www.example.com/interactivity1',
-        'cc_attribution': 'Attribution 1',
-        'visual_complexity': Level.LOW,
-        'visual_contrast': Level.HIGH
+        'title': 'Particle chunk',
+        'url': 'http://openprocessing.org/sketch/1619381/embed/',
+        'cc_attribution': ' “Particle chunk” by Juhani Halkomäkihttp://openprocessing.org/sketch/1619381License CreativeCommons Attribution NonCommercial ShareAlikehttps://creativecommons.org/licenses/by-nc-sa/3.0',
+        'visual_complexity': Level.MEDIUM,
+        'visual_contrast': Level.MEDIUM
     },
     {
-        'title': 'Interactivity 2',
-        'url': 'https://www.example.com/interactivity2',
+        'title': 'Blob Soup',
+        'url': 'http://openprocessing.org/sketch/1620516/embed/',
         'cc_attribution': 'Attribution 2',
-        'visual_complexity': Level.MEDIUM,
-        'visual_contrast': Level.LOW
-    },
-    {
-        'title': 'Interactivity 3',
-        'url': 'https://www.example.com/interactivity3',
-        'cc_attribution': 'Attribution 3',
-        'visual_complexity': Level.LOW,
+        'visual_complexity': Level.HIGH,
         'visual_contrast': Level.HIGH
     },
     {
-        'title': 'Interactivity 4',
-        'url': 'https://www.example.com/interactivity4',
-        'cc_attribution': 'Attribution 4',
+        'title': 'Particles',
+        'url': 'https://openprocessing.org/sketch/1786759/embed/',
+        'cc_attribution': '“Particles” by Naoki Tsutaehttp://openprocessing.org/sketch/1786759License CreativeCommons Attribution NonCommercial ShareAlikehttps://creativecommons.org/licenses/by-nc-sa/3.0',
         'visual_complexity': Level.MEDIUM,
-        'visual_contrast': Level.LOW
+        'visual_contrast': Level.HIGH
+    },
+    {
+        'title': 'Frozen Brush',
+        'url': 'https://openprocessing.org/sketch/413567/embed/',
+        'cc_attribution': '“Frozen brush” by Jason Labbehttp://openprocessing.org/sketch/413567License CreativeCommons Attribution ShareAlikehttps://creativecommons.org/licenses/by-sa/3.0',
+        'visual_complexity': Level.LOW,
+        'visual_contrast': Level.HIGH
     },
 ]
 

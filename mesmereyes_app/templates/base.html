@@ -11,13 +11,13 @@
       {% endfor %}
       <nav>
         <a href="/">Home</a>
+        <a href="/doodles">doodles</a>
         <div>
           {% if current_user.is_authenticated %}
-          <a href="/playlists">playlists</a>
-          <a href="/doodles">doodles</a>
           <a href="/new_doodle"> add doodle</a>
-          <a href="/new_playlist"> add playlist</a>
           <a href="/logout">Log Out</a>
+          <a href="/playlists">playlists</a>
+          <a href="/new_playlist"> add playlist</a>
 
           {% else %}
 

@@ -9,6 +9,15 @@ class Level(FormEnum):
     MEDIUM = 'Medium'
     HIGH = 'High'
 
+playlist_doodles = db.Table('playlist_doodles',
+    db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.id')),
+    db.Column('doodle_id', db.Integer, db.ForeignKey('doodle.id'))
+)
+class Playlist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    doodles = db.relationship('Doodle', secondary=playlist_doodles, back_populates='playlists')
+
 class Doodle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80))
@@ -16,16 +25,9 @@ class Doodle(db.Model):
     cc_attribution = db.Column(db.Text)
     visual_complexity = db.Column(db.Enum(Level), default=Level.MEDIUM)
     visual_contrast = db.Column(db.Enum(Level), default=Level.MEDIUM)
+    playlists = db.relationship('Playlist', secondary=playlist_doodles, back_populates='doodles')
 
-class Playlist(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-    users_who_selected = db.relationship('User', back_populates='playlists') 
 
-playlist_doodles = db.Table('playlist_doodles',
-    db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.id')),
-    db.Column('doodle_id', db.Integer, db.ForeignKey('doodle.id'))
-)
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,7 +42,6 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return f'<User: {self.username}>'
-
 
 user_playlists = db.Table('user_playlist',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),

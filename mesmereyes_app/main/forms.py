@@ -22,3 +22,6 @@ class PlaylistForm(FlaskForm):
     name = StringField('Playlist Name',
         validators=[DataRequired(), Length(min=1, max=80)])
     submit = SubmitField('Submit')
+
+class AddDoodleToPlaylistForm(FlaskForm):
+    playlist_id = SelectField('Playlist')

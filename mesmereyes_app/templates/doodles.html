@@ -7,5 +7,10 @@
 {% for doodle in all_doodles %}
 <div class="doodle">
   <a href="/doodle/{{ doodle.id }}">{{ doodle.title }}</a>
+  <a
+    href="{{ url_for('main.add_doodle_to_playlist', doodle_id=doodle.id) }}"
+    class="btn btn-primary"
+    >Add to Playlist</a
+  >
 </div>
 {% endfor %} {% endblock %}
