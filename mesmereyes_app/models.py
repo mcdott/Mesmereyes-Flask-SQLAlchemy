@@ -13,10 +13,18 @@ playlist_doodles = db.Table('playlist_doodles',
     db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.id')),
     db.Column('doodle_id', db.Integer, db.ForeignKey('doodle.id'))
 )
+# class Playlist(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(80))
+#     doodles = db.relationship('Doodle', secondary=playlist_doodles, back_populates='playlists')
+
 class Playlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User', back_populates='playlists')
     doodles = db.relationship('Doodle', secondary=playlist_doodles, back_populates='playlists')
+
 
 class Doodle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,18 +35,12 @@ class Doodle(db.Model):
     visual_contrast = db.Column(db.Enum(Level), default=Level.MEDIUM)
     playlists = db.relationship('Playlist', secondary=playlist_doodles, back_populates='doodles')
 
-
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), nullable=False, unique=True)
     password = db.Column(db.String(200), nullable=False)
     email = db.Column(db.String(120), nullable=False, unique=True)
-    # playlists = db.relationship(
-    #     'Playlist', secondary='user_playlist', back_populates='users_who_selected')
-    playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.id'), nullable=True)
-    playlists = db.relationship(
-        'Playlist', backref=db.backref('users', lazy=True))
+    playlists = db.relationship('Playlist', back_populates='user', lazy=True)
 
     def __repr__(self):
         return f'<User: {self.username}>'

@@ -4,7 +4,7 @@
 
 <h2>playlists</h2>
 
-{% for playlist in all_playlists %}
+{% for playlist in user_playlists %}
 <div class="playlist">
   <a href="/playlist/{{ playlist.id }}">{{ playlist.name }}</a>
 </div>

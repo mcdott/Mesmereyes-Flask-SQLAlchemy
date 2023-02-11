@@ -1,6 +1,10 @@
 from mesmereyes_app.models import Doodle, Level
 from mesmereyes_app.extensions import db
 
+# !!! NOTE: In order to seed the database you need to comment out the 'Authentication' 
+# section in mesmereyes_app/extensions.py or else you will get an error (circular import)
+# when you run python3 seed.py
+
 # Connect to the database
 db.create_all()
 
