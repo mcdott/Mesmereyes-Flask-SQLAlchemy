@@ -67,3 +67,9 @@ def new_playlist():
         return redirect(url_for('main.playlists'))
     return render_template('new_playlist.html', form=form)
 
+@main.route('/playlist/<int:playlist_id>')
+def playlist(playlist_id):
+    playlist = Playlist.query.get(playlist_id)
+    return render_template('playlist_details.html', playlist=playlist)
+
+

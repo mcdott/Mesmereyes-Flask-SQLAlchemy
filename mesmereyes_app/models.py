@@ -1,5 +1,5 @@
 from sqlalchemy_utils import URLType
-# from flask_login import UserMixin
+from flask_login import UserMixin
 from mesmereyes_app.extensions import db
 from mesmereyes_app.utils import FormEnum
 
@@ -20,8 +20,29 @@ class Doodle(db.Model):
 class Playlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
+    users_who_selected = db.relationship('User', back_populates='playlists') 
 
 playlist_doodles = db.Table('playlist_doodles',
     db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.id')),
     db.Column('doodle_id', db.Integer, db.ForeignKey('doodle.id'))
+)
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), nullable=False, unique=True)
+    password = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    # playlists = db.relationship(
+    #     'Playlist', secondary='user_playlist', back_populates='users_who_selected')
+    playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.id'), nullable=True)
+    playlists = db.relationship(
+        'Playlist', backref=db.backref('users', lazy=True))
+
+    def __repr__(self):
+        return f'<User: {self.username}>'
+
+
+user_playlists = db.Table('user_playlist',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.id'))
 )

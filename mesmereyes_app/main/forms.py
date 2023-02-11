@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, DateField, SelectField, SubmitField, TextAreaField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from wtforms.validators import DataRequired, Length, ValidationError
-from mesmereyes_app.models import Level
+from mesmereyes_app.models import Level, User
 
 class DoodleForm(FlaskForm):
     """Form to add a new Doodle."""
