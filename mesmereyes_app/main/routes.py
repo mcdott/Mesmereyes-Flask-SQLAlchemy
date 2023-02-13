@@ -48,33 +48,11 @@ def doodle(doodle_id):
     doodle = Doodle.query.get(doodle_id)
     return render_template('doodle_details.html', doodle=doodle)
 
-# @main.route('/playlists', methods=['GET', 'POST'])
-# def playlists():
-#     all_playlists = Playlist.query.all()
-#     return render_template('playlists.html', all_playlists=all_playlists)
-
 @main.route('/playlists', methods=['GET', 'POST'])
 @login_required
 def playlists():
     user_playlists = Playlist.query.filter_by(user=current_user).all()
     return render_template('playlists.html', user_playlists=user_playlists)
-
-
-# @main.route('/new_playlist', methods=['GET', 'POST'])
-# @login_required
-# def new_playlist():
-#     form = PlaylistForm()
-
-#     # if form was submitted and contained no errors
-#     if form.validate_on_submit(): 
-#         new_playlist = Playlist(
-#             name=request.form['name']
-#             )
-#         db.session.add(new_playlist)
-#         db.session.commit()
-#         flash('Playlist added successfully!')
-#         return redirect(url_for('main.playlists'))
-#     return render_template('new_playlist.html', form=form)
 
 @main.route('/new_playlist', methods=['GET', 'POST'])
 @login_required
@@ -98,7 +76,6 @@ def new_playlist():
 def add_doodle_to_playlist(doodle_id):
     doodle = Doodle.query.get(doodle_id)
     form = AddDoodleToPlaylistForm()
-    # form.playlist_id.choices = [(p.id, p.name) for p in Playlist.query.all()]
     form.playlist_id.choices = [(p.id, p.name) for p in Playlist.query.filter_by(user=current_user).all()]
    
 
@@ -117,12 +94,6 @@ def playlist(playlist_id):
     playlist = Playlist.query.get(playlist_id)
     return render_template('playlist_details.html', playlist=playlist)
 
-# @app.route('/playlist/<int:doodle_id>', methods=['POST'])
-# @login_required
-# def delete_doodle(doodle_id):
-#     doodle = Doodle.query.get(doodle_id)
-#     current_user.playlist_doodles.remove(doodle)
-#     db.session.commit()
-#     return redirect(url_for('main.playlist'))
+
 
 
