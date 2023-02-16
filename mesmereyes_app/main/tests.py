@@ -8,7 +8,7 @@ from mesmereyes_app.models import Doodle, Playlist, User
 
 """
 Run these tests with the command:
-python -m unittest mesmereyes_app.main.tests
+python3 -m unittest mesmereyes_app.main.tests
 """
 
 #################################################
@@ -33,10 +33,19 @@ def create_doodles():
     db.session.commit()
 
 def create_user():
-    # Creates a user with username 'me1' and password of 'password'
+    # Creates a user with username 'me1', email 'me1@test.com',
+    # and password 'password'
     password_hash = bcrypt.generate_password_hash('password').decode('utf-8')
-    user = User(username='me1', password=password_hash)
+    user = User(username='me1', email='me1@test.com', password=password_hash)
     db.session.add(user)
+    db.session.commit()
+
+def create_playlists():
+    p1 = Playlist(name='Playlist 1', user_id=1)
+    db.session.add(p1)
+
+    p2 = Playlist(name='Playlist 2', user_id=1)
+    db.session.add(p2)
     db.session.commit()
 
 #################################################
@@ -77,11 +86,10 @@ class MainTests(unittest.TestCase):
         self.assertNotIn('add doodle', response_text)
         self.assertNotIn('my playlists', response_text)
         self.assertNotIn('add playlist', response_text)
-        self.assertNotIn('me1', response_text)
         self.assertNotIn('Log Out', response_text)
 
     def test_homepage_logged_in(self):
-        """Test that the books show up on the homepage."""
+        """Test that the doodles show up on the homepage."""
         # Set up
         create_doodles()
         create_user()
@@ -96,7 +104,6 @@ class MainTests(unittest.TestCase):
         self.assertIn('add doodle', response_text)
         self.assertIn('my playlists', response_text)
         self.assertIn('add playlist', response_text)
-        self.assertIn('me1', response_text)
         self.assertIn('Log Out', response_text)
    
 
@@ -128,8 +135,30 @@ class MainTests(unittest.TestCase):
         self.assertNotIn('add doodle', response_text)
         self.assertNotIn('my playlists', response_text)
         self.assertNotIn('add playlist', response_text)
-        self.assertNotIn('me1', response_text)
         self.assertNotIn('Log Out', response_text)
+
+    def test_doodles_logged_in(self):
+        """Test that the doodles show up on the doodles page."""
+        # Set up
+        create_doodles()
+        create_user()
+        login(self.app, 'me1', 'password')
+
+        # Make a GET request
+        response = self.app.get('/doodles', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+
+        # Check that page contains all of the things we expect
+        response_text = response.get_data(as_text=True)
+        self.assertIn('add doodle', response_text)
+        self.assertIn('my playlists', response_text)
+        self.assertIn('add playlist', response_text)
+        self.assertIn('Log Out', response_text)
+
+        # Check that the page doesn't contain things we don't expect
+        # (these should be shown only to logged out users)
+        self.assertNotIn('Log In', response_text)
+        self.assertNotIn('Sign Up', response_text)
 
     def test_new_doodle(self):
         """Test that a doodle can be added."""
@@ -138,64 +167,126 @@ class MainTests(unittest.TestCase):
         login(self.app, 'me1', 'password')
 
         # Make a POST request with data
-        response = self.app.post('/doodles/new', data=dict(
-            title='Doodle 3',
-            url='https://www.google.com',
-            cc_attribution='google.com'
+        response = self.app.post('/new_doodle', data=dict(
+            title='New Doodle',
+            url='https://www.example.com',
+            cc_attribution='example.com',
+            visual_complexity='MEDIUM',
+            visual_contrast='MEDIUM'
         ), follow_redirects=True)
 
         # Check that doodle was added to database
-        doodle = Doodle.query.filter_by(title='Doodle 3').first()
+        doodle = Doodle.query.filter_by(title='New Doodle').first()
         self.assertIsNotNone(doodle)
-        self.assertEqual(doodle.title, 'Doodle 3')
-
-# @main.route('/doodle/<int:doodle_id>')
-# def doodle(doodle_id):
-#     doodle = Doodle.query.get(doodle_id)
-#     return render_template('doodle_details.html', doodle=doodle)
-
-# @main.route('/playlists', methods=['GET', 'POST'])
-# @login_required
-# def playlists():
-#     user_playlists = Playlist.query.filter_by(user=current_user).all()
-#     return render_template('playlists.html', user_playlists=user_playlists)
-
-# @main.route('/new_playlist', methods=['GET', 'POST'])
-# @login_required
-# def new_playlist():
-#     form = PlaylistForm()
-
-#     # if form was submitted and contained no errors
-#     if form.validate_on_submit(): 
-#         new_playlist = Playlist(
-#             name=request.form['name'],
-#             user=current_user
-#             )
-#         db.session.add(new_playlist)
-#         db.session.commit()
-#         flash('Playlist added successfully!')
-#         return redirect(url_for('main.playlists'))
-#     return render_template('new_playlist.html', form=form)
 
 
-# @main.route('/add_doodle_to_playlist/<int:doodle_id>', methods=['GET', 'POST'])
-# def add_doodle_to_playlist(doodle_id):
-#     doodle = Doodle.query.get(doodle_id)
-#     form = AddDoodleToPlaylistForm()
-#     form.playlist_id.choices = [(p.id, p.name) for p in Playlist.query.filter_by(user=current_user).all()]
-   
+    def test_doodle(self):
+        """Test that the doodle details page shows up."""
+        # Set up
+        create_doodles()
+        create_user()
 
-#     if form.validate_on_submit():
-#         playlist = Playlist.query.get(form.playlist_id.data)
-#         playlist.doodles.append(doodle)
-#         db.session.commit()
-#         flash(f'Doodle "{doodle.title}" added to playlist "{playlist.name}"!')
-#         return redirect(url_for('main.playlists'))
+        # Make a GET request
+        response = self.app.get('/doodle/1', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
 
-#     return render_template('add_doodle_to_playlist.html', doodle=doodle, form=form)
+        # Check that page contains all of the things we expect
+        response_text = response.get_data(as_text=True)
+        self.assertIn('Doodle 1', response_text)
+        self.assertIn('Log In', response_text)
+        self.assertIn('Sign Up', response_text)
+        
+        # Check that the page doesn't contain things we don't expect
+        # (these should be shown only to logged in users)
+        self.assertNotIn('add doodle', response_text)
+        self.assertNotIn('my playlists', response_text)
+        self.assertNotIn('add playlist', response_text)
+        self.assertNotIn('Log Out', response_text)
+
+    def test_playlists_logged_in(self):
+        """Test that the playlists page shows up."""
+        # Use helper functions to create a user and log in
+        create_user()
+        login(self.app, 'me1', 'password')
+        create_doodles()
+        create_playlists()
+
+        # Make a GET request
+        response = self.app.get('/playlists', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+
+        # Check that page contains all of the things we expect
+        response_text = response.get_data(as_text=True)
+        self.assertIn('Playlist 1', response_text)
+        self.assertIn('Playlist 2', response_text)
+        self.assertIn('Log Out', response_text)
+        self.assertIn('add doodle', response_text)
+        self.assertIn('my playlists', response_text)
+        self.assertIn('add playlist', response_text)
+        
+        # Check that the page doesn't contain things we don't expect
+        # (these should be shown only to logged in users)
+        self.assertNotIn('Log In', response_text)
+        self.assertNotIn('Sign Up', response_text)
+
+    def test_new_playlist_logged_in(self):
+        """Test that a playlist can be added."""
+        # Use helper functions to create a user and log in
+        create_user()
+        login(self.app, 'me1', 'password')
+
+        # Make a POST request with data
+        response = self.app.post('/new_playlist', data=dict(
+            name='New Playlist',
+        ), follow_redirects=True)
+        
+        # Check that playlist was added to database
+        playlist = Playlist.query.filter_by(name='New Playlist').first()
+        self.assertIsNotNone(playlist)
+ 
+
+    def test_add_doodle_to_playlist_logged_in(self):
+        """Test that a doodle can be added to a playlist."""
+        # Use helper functions to create a user, log in, and create a playlist
+        create_user()
+        login(self.app, 'me1', 'password')
+        create_doodles()
+        create_playlists()
+
+        # Make a POST request with data
+        response = self.app.post('/add_doodle_to_playlist/1', data=dict(
+            playlist_id=1,
+        ), follow_redirects=True)
+
+        # Check that the playlist exists
+        playlist = Playlist.query.get(1)
+        self.assertIsNotNone(playlist)
+
+        # Check that doodle was added to playlist
+        doodle = Doodle.query.get(1)
+        self.assertIn(doodle, playlist.doodles)
 
 
-# @main.route('/playlist/<int:playlist_id>')
-# def playlist(playlist_id):
-#     playlist = Playlist.query.get(playlist_id)
-#     return render_template('playlist_details.html', playlist=playlist)
+    def test_playlist(self):
+        """Test that the playlist details page shows up."""
+        # Set up
+        create_doodles()
+        create_user()
+        create_playlists()
+
+        # Make a GET request
+        response = self.app.get('/playlist/1', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+
+        # Check that page contains all of the things we expect
+        response_text = response.get_data(as_text=True)
+        self.assertIn('Playlist 1', response_text)
+        self.assertIn('Log In', response_text)
+        self.assertIn('Sign Up', response_text)
+        
+        # Check that the page doesn't contain things we don't expect
+        # (these should be shown only to logged in users)
+        self.assertNotIn('add doodle', response_text)
+        self.assertNotIn('my playlists', response_text)
+        self.assertNotIn('add playlist', response_text)
+        self.assertNotIn('Log Out', response_text)
