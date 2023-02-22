@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mesmereyes</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div id="content">
+      {% for message in get_flashed_messages() %}
+      <p>{{ message }}</p>
+      {% endfor %}
+      <nav>
+        <a href="/">Home</a>
+        <a href="/doodles">doodles</a>
+        <div>
+          {% if current_user.is_authenticated %}
+          <a href="/new_doodle"> add doodle</a>
+          <a href="/playlists">my playlists</a>
+          <a href="/new_playlist"> add playlist</a>
+          <a href="/logout">Log Out</a>
+
+          {% else %}
+
+          <a href="/signup">Sign Up</a>
+          <a href="/login">Log In</a>
+          {% endif %}
+        </div>
+      </nav>
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>
