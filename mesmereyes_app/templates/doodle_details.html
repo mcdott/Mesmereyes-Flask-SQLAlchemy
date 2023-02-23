@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1>{{ doodle.title }}</h1>
+
+<p><strong>cc_attribution:</strong> {{ doodle.cc_attribution }}</p>
+
+<p><strong>Visual Complexity:</strong> {{ doodle.visual_complexity }}</p>
+
+<p><strong>Visual Contrast:</strong> {{ doodle.visual_contrast }}</p>
+
+
+<p><iframe
+        title="{{ doodle.title }}"
+        src="{{ doodle.url }}"
+        width="400px"
+        height="400px"
+      ></p>
+
+{% endblock %}
+
+
+ 

@@ -1,0 +1,48 @@
+{% extends 'base.html' %} {% block content %}
+
+<p>add new doodle</p>
+
+<form method="POST" action="{{ url_for('main.new_doodle') }}">
+  {{ form.csrf_token }}
+  <fieldset>
+    <legend>Enter an OpenProcessing Sketch</legend>
+
+    {{ form.title.label }} {{ form.title }}
+    <ul>
+      {% for error in form.title.errors %}
+      <li class="error">{{ error }}</li>
+      {% endfor %}
+    </ul>
+
+    {{ form.url.label }} {{ form.url }}
+    <ul>
+      {% for error in form.url.errors %}
+      <li class="error">{{ error }}</li>
+      {% endfor %}
+    </ul>
+
+    {{ form.cc_attribution.label }} {{ form.cc_attribution }}
+    <ul>
+      {% for error in form.cc_attribution.errors %}
+      <li class="error">{{ error }}</li>
+      {% endfor %}
+    </ul>
+
+    {{ form.visual_complexity.label }} {{ form.visual_complexity }}
+    <ul>
+      {% for error in form.visual_complexity.errors %}
+      <li class="error">{{ error }}</li>
+      {% endfor %}
+    </ul>
+
+    {{ form.visual_contrast.label }} {{ form.visual_contrast }}
+    <ul>
+      {% for error in form.visual_contrast.errors %}
+      <li class="error">{{ error }}</li>
+      {% endfor %}
+    </ul>
+    <input type="submit" value="add doodle" />
+  </fieldset>
+</form>
+
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1>Mesmereyes</h1>
+
+<p><em>Accessible Gallery of Interactive Creations</em></p>
+
+<h2>Sample Playlist</h2>
+
+{% for doodle in sample_doodles %}
+<div class="doodle">
+  <a href="/doodle/{{ doodle.id }}">{{ doodle.title }}</a>
+</div>
+{% endfor %} {% endblock %}
