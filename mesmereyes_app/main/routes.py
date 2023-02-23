@@ -94,6 +94,17 @@ def playlist(playlist_id):
     playlist = Playlist.query.get(playlist_id)
     return render_template('playlist_details.html', playlist=playlist)
 
+@main.route('/delete_playlist/<int:playlist_id>', methods=['POST'])
+@login_required
+def delete_playlist(playlist_id):
+    playlist = Playlist.query.get(playlist_id)
+    if playlist.user == current_user:
+        db.session.delete(playlist)
+        db.session.commit()
+        flash(f'Playlist "{playlist.name}" deleted!')
+    else:
+        flash('You do not have permission to delete this playlist.')
+    return redirect(url_for('main.playlists'))
 
 
 
