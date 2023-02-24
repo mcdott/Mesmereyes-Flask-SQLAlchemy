@@ -2,15 +2,26 @@
 
 <h1>Mesmereyes</h1>
 
-<h2>doodles</h2>
-
-{% for doodle in all_doodles %}
-<div class="doodle">
-  <a href="/doodle/{{ doodle.id }}">{{ doodle.title }}</a>
-  <a
-    href="{{ url_for('main.add_doodle_to_playlist', doodle_id=doodle.id) }}"
-    class="btn btn-primary"
-    >Add to Playlist</a
-  >
-</div>
-{% endfor %} {% endblock %}
+<table>
+  <thead>
+    <tr>
+      <th>Doodles</th>
+      <th>Add to Playlist</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for doodle in all_doodles %}
+    <tr>
+      <td><a href="/doodle/{{ doodle.id }}">{{ doodle.title }}</a></td>
+      <td>
+        <a
+          href="{{ url_for('main.add_doodle_to_playlist', doodle_id=doodle.id) }}"
+          class="btn btn-primary"
+          >+</a
+        >
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

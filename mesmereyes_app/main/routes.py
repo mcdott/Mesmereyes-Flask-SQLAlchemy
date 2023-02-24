@@ -106,5 +106,17 @@ def delete_playlist(playlist_id):
         flash('You do not have permission to delete this playlist.')
     return redirect(url_for('main.playlists'))
 
+@main.route('/delete_doodle_from_playlist/<int:playlist_id>/<int:doodle_id>', methods=['POST'])
+@login_required
+def delete_doodle_from_playlist(playlist_id, doodle_id):
+    playlist = Playlist.query.get(playlist_id)
+    doodle = Doodle.query.get(doodle_id)
+    if doodle in playlist.doodles:
+        playlist.doodles.remove(doodle)
+        db.session.commit()
+        flash(f'Doodle "{doodle.title}" removed from playlist "{playlist.name}"!')
+    else:
+        flash(f'Doodle "{doodle.title}" is not in playlist "{playlist.name}".')
+    return redirect(url_for('main.playlist', playlist_id=playlist_id))
 
 

@@ -290,3 +290,31 @@ class MainTests(unittest.TestCase):
         self.assertNotIn('my playlists', response_text)
         self.assertNotIn('add playlist', response_text)
         self.assertNotIn('Log Out', response_text)
+
+    def test_delete_doodle_from_playlist_logged_in(self):
+        """Test that a doodle can be removed from a playlist."""
+        # Use helper functions to create a user, log in, create a playlist, and add a doodle to the playlist
+        create_user()
+        login(self.app, 'me1', 'password')
+        create_doodles()
+        create_playlists()
+        response = self.app.post('/add_doodle_to_playlist/1', data=dict(
+            playlist_id=1,
+        ), follow_redirects=True)
+
+        # Check that the playlist exists and has the doodle
+        playlist = Playlist.query.get(1)
+        self.assertIsNotNone(playlist)
+        doodle = Doodle.query.get(1)
+        self.assertIn(doodle, playlist.doodles)
+
+        # Remove the doodle from the playlist
+        response = self.app.post('/delete_doodle_from_playlist/1', data=dict(
+            doodle_id=1,
+        ), follow_redirects=True)
+
+        # Check that the playlist no longer has the doodle
+        playlist = Playlist.query.get(1)
+        self.assertNotIn(doodle, playlist.doodles)
+
+
