@@ -5,13 +5,23 @@
   <thead>
     <tr>
       <th>Title</th>
-      <th>Delete</th>
+      <th>Doodle</th>
+      <th>Delete from Playlist</th>
     </tr>
   </thead>
   <tbody>
     {% for doodle in playlist.doodles %}
     <tr>
       <td><a href="/doodle/{{ doodle.id }}">{{ doodle.title }}</a></td>
+      <td>
+        <iframe
+          src="{{ doodle.url }}"
+          frameborder="0"
+          allowfullscreen
+          width="400"
+          height="400"
+        ></iframe>
+      </td>
       <td>
         <form
           action="{{ url_for('main.delete_doodle_from_playlist', playlist_id=playlist.id, doodle_id=doodle.id) }}"

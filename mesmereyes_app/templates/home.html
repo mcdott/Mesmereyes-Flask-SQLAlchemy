@@ -8,6 +8,13 @@
 
 {% for doodle in sample_doodles %}
 <div class="doodle">
-  <a href="/doodle/{{ doodle.id }}">{{ doodle.title }}</a>
+  <h3>{{ doodle.title }}</h3>
+  <iframe
+    src="{{ doodle.url }}"
+    frameborder="0"
+    allowfullscreen
+    width="400"
+    height="400"
+  ></iframe>
 </div>
 {% endfor %} {% endblock %}
