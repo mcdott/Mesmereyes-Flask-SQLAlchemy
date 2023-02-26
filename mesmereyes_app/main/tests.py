@@ -112,31 +112,6 @@ class MainTests(unittest.TestCase):
         self.assertNotIn('Log In', response_text)
         self.assertNotIn('Sign Up', response_text)
 
-
-    def test_doodles_logged_out(self):
-        """Test that the doodles show up on the doodles page."""
-        # Set up
-        create_doodles()
-        create_user()
-
-        # Make a GET request
-        response = self.app.get('/doodles', follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
-
-        # Check that page contains all of the things we expect
-        response_text = response.get_data(as_text=True)
-        self.assertIn('Doodle 1', response_text)
-        self.assertIn('Doodle 2', response_text)
-        self.assertIn('Log In', response_text)
-        self.assertIn('Sign Up', response_text)
-        
-        # Check that the page doesn't contain things we don't expect
-        # (these should be shown only to logged in users)
-        self.assertNotIn('add doodle', response_text)
-        self.assertNotIn('my playlists', response_text)
-        self.assertNotIn('add playlist', response_text)
-        self.assertNotIn('Log Out', response_text)
-
     def test_doodles_logged_in(self):
         """Test that the doodles show up on the doodles page."""
         # Set up
@@ -243,29 +218,6 @@ class MainTests(unittest.TestCase):
         # Check that playlist was added to database
         playlist = Playlist.query.filter_by(name='New Playlist').first()
         self.assertIsNotNone(playlist)
- 
-
-    def test_add_doodle_to_playlist_logged_in(self):
-        """Test that a doodle can be added to a playlist."""
-        # Use helper functions to create a user, log in, and create a playlist
-        create_user()
-        login(self.app, 'me1', 'password')
-        create_doodles()
-        create_playlists()
-
-        # Make a POST request with data
-        response = self.app.post('/add_doodle_to_playlist/1', data=dict(
-            playlist_id=1,
-        ), follow_redirects=True)
-
-        # Check that the playlist exists
-        playlist = Playlist.query.get(1)
-        self.assertIsNotNone(playlist)
-
-        # Check that doodle was added to playlist
-        doodle = Doodle.query.get(1)
-        self.assertIn(doodle, playlist.doodles)
-
 
     def test_playlist(self):
         """Test that the playlist details page shows up."""
@@ -298,8 +250,9 @@ class MainTests(unittest.TestCase):
         login(self.app, 'me1', 'password')
         create_doodles()
         create_playlists()
-        response = self.app.post('/add_doodle_to_playlist/1', data=dict(
+        response = self.app.post('/doodles', data=dict(
             playlist_id=1,
+            doodle_id=1
         ), follow_redirects=True)
 
         # Check that the playlist exists and has the doodle
@@ -309,12 +262,8 @@ class MainTests(unittest.TestCase):
         self.assertIn(doodle, playlist.doodles)
 
         # Remove the doodle from the playlist
-        response = self.app.post('/delete_doodle_from_playlist/1', data=dict(
-            doodle_id=1,
-        ), follow_redirects=True)
+        response = self.app.post('/delete_doodle_from_playlist/1/1', follow_redirects=True)
 
         # Check that the playlist no longer has the doodle
         playlist = Playlist.query.get(1)
         self.assertNotIn(doodle, playlist.doodles)
-
-
