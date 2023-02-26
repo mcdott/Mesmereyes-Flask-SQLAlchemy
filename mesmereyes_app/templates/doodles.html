@@ -2,15 +2,40 @@
 
 <h1>Mesmereyes</h1>
 
-<h2>doodles</h2>
-
-{% for doodle in all_doodles %}
-<div class="doodle">
-  <a href="/doodle/{{ doodle.id }}">{{ doodle.title }}</a>
-  <a
-    href="{{ url_for('main.add_doodle_to_playlist', doodle_id=doodle.id) }}"
-    class="btn btn-primary"
-    >Add to Playlist</a
-  >
-</div>
-{% endfor %} {% endblock %}
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Doodle</th>
+      <th>Add to Playlist</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for doodle in all_doodles %}
+    <tr>
+      <td><a href="/doodle/{{ doodle.id }}">{{ doodle.title }}</a></td>
+      <td>
+        <iframe
+          src="{{ doodle.url }}"
+          frameborder="0"
+          allowfullscreen
+          width="400"
+          height="400"
+        ></iframe>
+      </td>
+      <td>
+        <form action="{{ url_for('main.doodles') }}" method="POST">
+          <select name="playlist_id">
+            {% for playlist in user_playlists %}
+            <option value="{{ playlist.id }}">{{ playlist.name }}</option>
+            {% endfor %}
+          </select>
+          <input type="hidden" name="doodle_id" value="{{ doodle.id }}" />
+          <button type="submit">Add</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

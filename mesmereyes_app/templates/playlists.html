@@ -2,10 +2,28 @@
 
 <h1>Mesmereyes</h1>
 
-<h2>playlists</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Playlists</th>
+      <th>Delete Playlist</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for playlist in user_playlists %}
+    <tr>
+      <td><a href="/playlist/{{ playlist.id }}">{{ playlist.name }}</a></td>
+      <td>
+        <form
+          action="{{ url_for('main.delete_playlist', playlist_id=playlist.id) }}"
+          method="POST"
+        >
+          <button type="submit" class="delete-btn">-</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-{% for playlist in user_playlists %}
-<div class="playlist">
-  <a href="/playlist/{{ playlist.id }}">{{ playlist.name }}</a>
-</div>
-{% endfor %} {% endblock %}
+{% endblock %}

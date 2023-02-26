@@ -1,7 +1,0 @@
-{% extends 'base.html' %} {% block content %}
-<h1>Add Doodle to Playlist</h1>
-<form method="post">
-  {{ form.hidden_tag() }} {{ form.playlist_id.label }} {{ form.playlist_id() }}
-  <input type="submit" value="Add" />
-</form>
-{% endblock %}
